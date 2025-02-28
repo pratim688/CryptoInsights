@@ -1,14 +1,12 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-//import EditorJsHtml from "editorjs-html";
-// import { IoHeart } from "react-icons/io5";
-// import { IoCheckmarkCircle } from "react-icons/io5"; // Import the tick mark icon
 import LikeButton from "./LikeButton";
+import { Blog } from "@/utils/types";
 
 const SingleBlog = () => {
   const { blog_id } = useParams();
-  const [blog, setBlog] = useState(null);
+  const [blog, setBlog] = useState<Blog | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -17,7 +15,7 @@ const SingleBlog = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
     document.title = `${blog?.title} - Checkout our latest Blogs`;
-  }, []);
+  }, [blog]);
 
   useEffect(() => {
     fetchBlog();
@@ -38,9 +36,9 @@ const SingleBlog = () => {
           totalLikes: activity?.total_likes || 0,
         });
       }
-      console.log(blog)
+      console.log(blog);
     } catch (err) {
-      setError("Failed to fetch blog data");
+      //setError("Failed to fetch blog data");
     } finally {
       setLoading(false);
     }
@@ -49,22 +47,21 @@ const SingleBlog = () => {
   if (loading) return <p>Loading blog...</p>;
   if (error) return <p>{error}</p>;
 
-  // Convert Editor.js content to HTML
-  // const contentHtml = blog?.content.map((block) =>
-  //   editorJsHtml.parse(block).join("")
-  // );
-
-  //date formatter
-  const formatDate = (dateString) => {
+  // Helper function to format date as "Month Date, Year"
+  const formatDate = (dateString: Date) => {
     const date = new Date(dateString);
-    const options = { year: "numeric", month: "long", day: "numeric" };
-    return date.toLocaleDateString("en-US", options); // You can change 'en-US' to other locales if needed
+    const options: Intl.DateTimeFormatOptions = {
+      year: "numeric",
+      month: "long", // "short" | "numeric" also valid
+      day: "numeric",
+    };
+    return date.toLocaleDateString("en-US", options);
   };
 
   return (
     <div className="container mx-auto p-4 lg:px-40">
       <div className="flex justify-center gap-2 flex-wrap">
-        {blog?.tags?.map((tag, index) => (
+        {blog?.tags.map((tag, index) => (
           <span key={index} className="px-3 py-1 text-xl capitalize">
             {tag}
           </span>
@@ -80,10 +77,11 @@ const SingleBlog = () => {
         </h1>
         <div className="block md:hidden bg-gray-400 w-full h-[1px]"></div>
         <div className="hidden md:block">|</div>
-        <h1 className="px-2 py-1 rounded-md">{formatDate(blog?.updatedAt)}</h1>
+        <h1 className="px-2 py-1 rounded-md">
+          {blog?.updatedAt ? formatDate(blog.updatedAt) : "Loading..."}
+        </h1>
         <div className="hidden md:block">|</div>
         <div className="block md:hidden bg-gray-400 w-full h-[1px]"></div>
-      
 
         {/* dynamic liking  */}
         <LikeButton
@@ -101,74 +99,73 @@ const SingleBlog = () => {
 
       <div className="bg-gray-400 w-full h-[1px] my-5"></div>
 
-    
       <div className="mt-8 prose prose-sm sm:prose-lg max-w-none px-4 md:px-4 lg:px-6">
-       {blog.content?.[0]?.blocks.map((item, index) => {
-  switch (item.type) {
-    case "paragraph":
-      return (
-        <p
-          key={index}
-          className="mb-6 leading-relaxed text-gray-700 text-lg [&>a]:text-cyan-600 [&>a]:no-underline [&>a]:border-b [&>a]:border-cyan-500 [&>a]:hover:text-cyan-700 [&>a]:transition-colors"
-          dangerouslySetInnerHTML={{
-            __html: item.data?.text || "",
-          }}
-        />
-      );
+        {blog?.content?.[0]?.blocks.map((item, index) => {
+          switch (item.type) {
+            case "paragraph":
+              return (
+                <p
+                  key={index}
+                  className="mb-6 leading-relaxed text-gray-700 text-lg [&>a]:text-cyan-600 [&>a]:no-underline [&>a]:border-b [&>a]:border-cyan-500 [&>a]:hover:text-cyan-700 [&>a]:transition-colors"
+                  dangerouslySetInnerHTML={{
+                    __html: item.data?.text || "",
+                  }}
+                />
+              );
 
-    case "header":
-      return (
-        <h2
-          key={index}
-          className="text-2xl font-bold mb-4 mt-8 text-gray-900 [&>a]:text-cyan-600 [&>a]:no-underline [&>a]:hover:text-cyan-700"
-          dangerouslySetInnerHTML={{
-            __html: item.data?.text || "",
-          }}
-        />
-      );
+            case "header":
+              return (
+                <h2
+                  key={index}
+                  className="text-2xl font-bold mb-4 mt-8 text-gray-900 [&>a]:text-cyan-600 [&>a]:no-underline [&>a]:hover:text-cyan-700"
+                  dangerouslySetInnerHTML={{
+                    __html: item.data?.text || "",
+                  }}
+                />
+              );
 
-    case "image":
-      return (
-        <figure key={index} className="my-12">
-          <div className="overflow-hidden rounded-lg shadow-lg bg-gray-50">
-            <img
-              src={item.data?.file?.url || ""}
-              alt={item.data?.file?.caption || ""}
-              className="w-full h-full object-cover"
-            />
-          </div>
-          {item.data?.file?.caption && (
-            <figcaption className="mt-3 text-gray-500 text-center text-lg">
-              {item.data.file.caption}
-            </figcaption>
-          )}
-        </figure>
-      );
+            case "image":
+              return (
+                <figure key={index} className="my-12">
+                  <div className="overflow-hidden rounded-lg shadow-lg bg-gray-50">
+                    <img
+                      src={item.data?.file?.url || ""}
+                      alt={(item.data?.file as any)?.caption || ""}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  {(item.data?.file as any)?.caption && (
+                    <figcaption className="mt-3 text-gray-500 text-center text-lg">
+                      {(item.data?.file as any)?.caption || ""}
+                    </figcaption>
+                  )}
+                </figure>
+              );
 
-    case "list":
-      return (
-        <ul key={index} className="mb-6">
-          {item.data?.items?.map((listItem, listIndex) => (
-            <li
-              key={listIndex}
-              className="text-gray-700 text-lg list-disc mb-4 ml-5"
-              dangerouslySetInnerHTML={{
-                __html: listItem.content || "",
-              }}
-            />
-          ))}
-        </ul>
-      );
+            case "list":
+              return (
+                <ul key={index} className="mb-6">
+                  {item.data?.items?.map((listItem, listIndex) => (
+                    <li
+                      key={listIndex}
+                      className="text-gray-700 text-lg list-disc mb-4 ml-5"
+                      dangerouslySetInnerHTML={{
+                        __html: (listItem as any)?.content || "",
+                      }}
+                    />
+                  ))}
+                </ul>
+              );
 
-    default:
-      // Handle unexpected or unsupported block types
-      return (
-        <div key={index} className="mb-6 text-gray-700">
-          <strong>Unsupported block type:</strong> {item.type}
-        </div>
-      );
-  }
-})}
+            default:
+              // Handle unexpected or unsupported block types
+              return (
+                <div key={index} className="mb-6 text-gray-700">
+                  <strong>Unsupported block type:</strong> {item.type}
+                </div>
+              );
+          }
+        })}
       </div>
 
       <div></div>

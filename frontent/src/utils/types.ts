@@ -107,19 +107,23 @@ export interface Activity {
 }
 
 export interface Blog {
-  title?: string;
-  des?: string;
-  createdAt?: string;
-  banner?: string;
-  activity?: Activity;
-  content?: Array<{ blocks: Block[] }>;
-  author?: {
-    name?: string;
+  title: string;
+  des: string;
+  createdAt: string;
+  banner: string;
+  activity: Activity;
+  content: Array<{ blocks: Block[] }>;
+  author: {
+    name: string;
     profilePicture?: string;
   };
-  readTime?: string;
-  likedByDevices?: string[]; // Add this field for the list of devices that liked the blog
+  readTime: string;
+  likedByDevices: string[]; // Add this field for the list of devices that liked the blog
   likedOrNot: boolean;
+  tags: any[];
+  blog_id:string;
+  updatedAt:Date;
+  totalLikes:number;
 }
 
 //types of write blog

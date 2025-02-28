@@ -1,4 +1,4 @@
-import { RequestHandler, Router } from "express";
+import { Router } from "express";
 import { CreateBlog, DeleteBlog, GetAllBlogs, GetBlog, multerUpload, toggleLikeBlog, UpdateBlog, UploadFile, UserBlogHistory } from "../controllers/blog.controller";
 
 // Define the extended request type properly

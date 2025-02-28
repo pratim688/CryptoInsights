@@ -1,16 +1,23 @@
-import PropTypes from "prop-types";
 import { IoHeart } from "react-icons/io5";
 import { Link } from "react-router-dom";
 import { FaArrowRightLong } from "react-icons/fa6";
+import { Blog } from "@/utils/types";
 
 // Helper function to format date as "Month Date, Year"
-const formatDate = (dateString) => {
+const formatDate = (dateString: Date) => {
   const date = new Date(dateString);
-  const options = { year: "numeric", month: "long", day: "numeric" };
+  const options: Intl.DateTimeFormatOptions = {
+    year: "numeric",
+    month: "long", // "short" | "numeric" also valid
+    day: "numeric",
+  };
   return date.toLocaleDateString("en-US", options);
 };
-
-const BlogBigCard = ({ blog, index }) => {
+type BlogBigCardProps = {
+  blog: Blog; // blog is a single object, not an array
+  index: number;
+};
+const BlogBigCard : React.FC<BlogBigCardProps> =  ({ blog, index }) => {
   const category = blog.tags[0];
   const isEven = index % 2 !== 0;
 
@@ -132,21 +139,5 @@ const BlogBigCard = ({ blog, index }) => {
   );
 };
 
-BlogBigCard.propTypes = {
-  blog: PropTypes.shape({
-    banner: PropTypes.string,
-    title: PropTypes.string,
-    des: PropTypes.string,
-    author: PropTypes.shape({
-      name: PropTypes.string,
-    }),
-    updatedAt: PropTypes.string,
-    tags: PropTypes.arrayOf(PropTypes.string),
-    activity: PropTypes.shape({
-      total_likes: PropTypes.number,
-    }),
-  }).isRequired,
-  index: PropTypes.number.isRequired,
-};
 
 export default BlogBigCard;

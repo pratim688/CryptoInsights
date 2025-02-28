@@ -7,11 +7,15 @@ import { FaArrowRightLong } from "react-icons/fa6";
 
 
 // Helper function to format date as "Month Date, Year"
-const formatDate = (dateString:Date) => {
-  const date = new Date(dateString)
-  const options = { year: 'numeric', month: 'long', day: 'numeric' }
-  return date.toLocaleDateString('en-US', options) // You can change 'en-US' to other locales if needed
-}
+const formatDate = (dateString: Date) => {
+  const date = new Date(dateString);
+  const options: Intl.DateTimeFormatOptions = {
+    year: "numeric",
+    month: "long", // "short" | "numeric" also valid
+    day: "numeric",
+  };
+  return date.toLocaleDateString("en-US", options);
+};
 
 const BlogSmallCard2 = ({ blog }:any) => {
   return (

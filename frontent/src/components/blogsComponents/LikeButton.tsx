@@ -1,6 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
-import { IoHeart, IoCheckmarkCircle } from "react-icons/io5";
+import { IoHeart } from "react-icons/io5";
 
 const LikeButton = ({ blogId, initialLiked = false, initialLikeCount = 0 }:any) => {
   const [liked, setLiked] = useState(initialLiked);

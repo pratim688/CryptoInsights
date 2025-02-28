@@ -3,7 +3,12 @@ import { Link } from "react-router-dom";
 import BlogBigCard from "./BlogBigCard";
 import BlogSmallCard from "./BlogSmallCard";
 import AdvertisementIcon from "../../assets/AdvertisementIcon.svg";
-const TopSection = ({ blogs }:any) => {
+import { Blog } from "@/utils/types";
+
+type BlogBigCardProps = {
+  blog: Blog; // blog is a single object, not an array
+};
+const TopSection: React.FC<BlogBigCardProps> = ({ blogs }:any) => {
   const [limit, setLimit] = useState(4);
 
   // Select 4 random blogs
@@ -12,6 +17,7 @@ const TopSection = ({ blogs }:any) => {
   const handleLoadMore = () => {
     setLimit((prevLimit) => prevLimit + 4); // Load more blogs in increments of 4
   };
+  
 
   return (
     <div className="px-4 lg:px-40">
@@ -24,7 +30,7 @@ const TopSection = ({ blogs }:any) => {
         </div>
         {/* Display the remaining blogs as small cards */}
         <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-3 bg-gradient-to-r from-white via-[#93c8d42c] to-white">
-          {randomBlogs.slice(1).map((blog, index) => (
+          {randomBlogs.slice(1).map((blog : any, index : number) => (
             <div
               key={index}
               className="items-start md:items-center justify-between mb-8 "

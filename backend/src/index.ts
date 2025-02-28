@@ -7,7 +7,7 @@ import cors from 'cors';
 import cookieParser from "cookie-parser";
 dotenv.config();
 const app = express();
-const PORT = 5000;
+const {PORT} = process.env;
 const corsOptions = {
   origin: [`http://localhost:5173`, `http://localhost:5174`],
   methods: "GET,POST,PATCH,DELETE,PUT",

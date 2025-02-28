@@ -11,7 +11,7 @@ import Ads2 from "./Ads2";
 const BlogByCategory = () => {
   const { category } = useParams(); // Get the category from the URL parameter
   const [blogs, setBlogs] = useState([]);
-  const [limit, setLimit] = useState(9);
+  const [limit, _setLimit] = useState(9);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [totalPages, setTotalPages] = useState(1); // Track total pages
@@ -114,7 +114,7 @@ const BlogByCategory = () => {
         ) : (
           <div>
             <h2 className="text-2xl font-semibold mb-4 mt-10">
-              Blogs on {category?.charAt(0).toUpperCase() + category.slice(1)}
+              Blogs on {category?.charAt(0).toUpperCase() + category!.slice(1)}
             </h2>
 
             {/* Grid layout to show 3 items per row */}

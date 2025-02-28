@@ -15,8 +15,8 @@ type BlogsByCategory = {
 const AllBlog = () => {
   const [blogsByCategory, setBlogsByCategory] = useState<BlogsByCategory>({});
   const [loading, setLoading] = useState(true);
-  const [limit, setLimit] = useState(4);
-  const [page, setPage] = useState(1);
+  const [limit] = useState(4);
+  const [page] = useState(1);
   const [expandedCategories, setExpandedCategories] = useState<Record<string, number>>({});
 
   const allBlogs = Object.values(blogsByCategory).flat();

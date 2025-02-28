@@ -1,5 +1,5 @@
 import mongoose, { Schema, Document } from "mongoose";
-import { compareValue, hashValue } from "../utils/bcrypt";
+//import { compareValue, hashValue } from "../utils/bcrypt";
 
 // Interface defining the User document
 export interface UserDocument extends Document {
