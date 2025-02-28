@@ -376,20 +376,6 @@ const CreateBlog: React.FC = () => {
                 </div>
               </div>
             </div>
-
-            {/* <div className="relative">
-              <label className="text-sm font-semibold text-gray-700 mb-2 block">
-                Tags
-              </label>
-              <input
-                id="tags"
-                type="text"
-                value={tags.join(", ")}
-                onChange={(e) => setTags(e.target.value.split(",").map(tag => tag.trim().toLowerCase()))}
-                className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 outline-none"
-                placeholder="Enter tags separated by commas..."
-              />
-            </div> */}
             <div className="relative flex gap-6 ">
               <label className="text-sm font-semibold text-gray-700 mb-2 block mt-1">
                 Tags:

@@ -8,7 +8,14 @@ import { BlogFormData, FormValidation } from "../../../utils/types";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+  Value,
+} from "@radix-ui/react-select";
 
 const EditBlog: React.FC = () => {
   const editorInstance = useRef<EditorJS | null>(null);
@@ -29,6 +36,13 @@ const EditBlog: React.FC = () => {
   });
 
   const [tags, setTags] = useState<string[]>([]);
+  const predefinedTags = [
+    "Latest",
+    "Press-release",
+    "Coins",
+    "Wallets",
+    "Blockchain",
+  ];
   // Updated handler with proper typing
   const handleBannerUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     try {
@@ -40,10 +54,14 @@ const EditBlog: React.FC = () => {
 
       const formData = new FormData();
       formData.append("image", file);
-      const response = await axios.post(`${import.meta.env.VITE_API_URL}/v1/blog/uploadFile`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-        withCredentials: true,
-      });
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}/v1/blog/uploadFile`,
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+          withCredentials: true,
+        }
+      );
 
       if (response.data.success) {
         setFormData((prev) => ({
@@ -95,11 +113,15 @@ const EditBlog: React.FC = () => {
         tags,
       };
 
-      const response = await axios.put(`${import.meta.env.VITE_API_URL}/v1/blog/updateblog/${id}`, blogData, {
-        headers: {
-          "Content-Type": "application/json", // Ensure the correct content type
-        },
-      });
+      const response = await axios.put(
+        `${import.meta.env.VITE_API_URL}/v1/blog/updateblog/${id}`,
+        blogData,
+        {
+          headers: {
+            "Content-Type": "application/json", // Ensure the correct content type
+          },
+        }
+      );
 
       if (response.status === 200) {
         // Only reset form and editor on successful save
@@ -113,8 +135,7 @@ const EditBlog: React.FC = () => {
           description: "",
           previewImage: "",
         });
-        navigate('/user/dashboard/blogs')
-        
+        navigate("/user/dashboard/blogs");
       }
     } catch (error: any) {
       console.error(error.response?.data?.message || "Failed to save blog");
@@ -124,7 +145,9 @@ const EditBlog: React.FC = () => {
   useEffect(() => {
     const fetchBlog = async () => {
       try {
-        const response = await axios.get(`${import.meta.env.VITE_API_URL}/v1/blog/getblogs/${id}`);
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_URL}/v1/blog/getblogs/${id}`
+        );
         const blogData = response.data;
         // Update formData with fetched blog data
         setFormData({
@@ -195,11 +218,20 @@ const EditBlog: React.FC = () => {
     return () => {
       clearTimeout(timeout);
       if (editorInstance.current) {
-        editorInstance.current.destroy();
+        editorInstance.current.destroy;
         editorInstance.current = null;
       }
     };
   }, [formData.editorData]);
+  // Handle tag selection
+  const handleTagSelection = (tag: string) => {
+    console.log(tags);
+    if (tags.includes(tag)) {
+      setTags((prevTags) => prevTags.filter((t) => t !== tag));
+    } else {
+      setTags((prevTags) => [...prevTags, tag]);
+    }
+  };
 
   return (
     <>
@@ -395,26 +427,25 @@ const EditBlog: React.FC = () => {
                 </div>
               </div>
             </div>
+            {/* Tags */}
             <div className="relative">
               <label className="text-sm font-semibold text-gray-700 mb-2 block">
                 Tags
               </label>
-              <input
-                id="tags"
-                type="text"
-                value={tags.join(", ")}
-                onChange={(e) =>
-                  setTags(
-                    e.target.value
-                      .split(",") // Split by commas
-                      .map((tag) => tag.trim().toLowerCase()) // Normalize tags
-                  )
-                }
-                className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 outline-none"
-                placeholder="Enter tags separated by commas..."
-              />
+              <select
+                className="w-[180px] p-2 border rounded-md"
+                onChange={(e:any) => setTags([e.target.value.trim().toLowerCase()])}
+              >
+                <option value="" disabled selected>
+                  {tags}
+                </option>
+                {predefinedTags.map((tag) => (
+                  <option key={tag} value={tag}>
+                    {tag}
+                  </option>
+                ))}
+              </select>
             </div>
-
             <div className="flex justify-center pt-6">
               <button
                 onClick={handleSave}

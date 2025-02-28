@@ -153,8 +153,8 @@ const AllBlog = () => {
                     width: "100vw",
                   }}
                 >
-                  <div className="mx-auto container py-8 lg:px-40 px-4">
-                    <h2 className="text-4xl font-bold text-center mb-8 ">
+                  <div className="mx-auto container lg:px-40 px-4 mb-8 mt-6">
+                    <h2 className="text-4xl font-bold text-center mb-8">
                       {category.charAt(0).toUpperCase() + category.slice(1)}
                     </h2>
 
@@ -194,13 +194,7 @@ const AllBlog = () => {
                         >
                           Load More
                         </button>
-                      )}
-                    {/* "View All" Button */}
-                    {/* <Link to={`/blogs/category/${category.toLowerCase()}`}>
-                      <button className="block md:hidden lg:hidden mt-4 px-4 py-2 bg-primaryCyan text-white rounded-md hover:bg-cyan-700 transition-colors w-full text-center">
-                        View All
-                      </button>
-                    </Link> */}
+                      )}                 
                   </div>
                 </div>
                 {(index + 1) % 3 === 0 && index !== 0 && (
