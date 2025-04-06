@@ -67,11 +67,12 @@ export const LoginUser = catchErrors(async (req: Request, res: Response) => {
   // Send the token as a cookie
   res.cookie("authToken", token, {
     httpOnly: true,
-    secure: true,
-    sameSite: "none",
-    maxAge: 24 * 60 * 60 * 1000, // 1 day
+    secure: process.env.NODE_ENV === "production", // ← false locally
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", // ← works with HTTP
+    maxAge: 24 * 60 * 60 * 1000,
   });
   
+
   res.status(OK).json({ message: "Login successful", user: user });
 });
 
