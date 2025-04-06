@@ -66,12 +66,12 @@ export const LoginUser = catchErrors(async (req: Request, res: Response) => {
   );
   // Send the token as a cookie
   res.cookie("authToken", token, {
-    httpOnly: true, // This makes the cookie inaccessible to JavaScript
-    secure: process.env.NODE_ENV === "production", // Only use this in production to require HTTPS
-    maxAge: 24 * 60 * 60 * 1000, // 1 day expiry for the cookie
-    sameSite: "strict", // Restrict the cookie to first-party requests
+    httpOnly: true,
+    secure: true,
+    sameSite: "none",
+    maxAge: 24 * 60 * 60 * 1000, // 1 day
   });
-
+  
   res.status(OK).json({ message: "Login successful", user: user });
 });
 
